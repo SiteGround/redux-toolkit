@@ -496,7 +496,12 @@ export async function generateApi(
                 ),
             createObjectLiteralProperty(pickParams('cookie'), 'cookies'),
             createObjectLiteralProperty(pickParams('header'), 'headers'),
-            createObjectLiteralProperty(pickParams('query'), 'params'),
+            isQuery && verb.toUpperCase() === 'GET' && pickParams('query').length > 0
+              ? factory.createPropertyAssignment(
+                  factory.createIdentifier('params'),
+                  factory.createIdentifier('queryArg')
+                )
+              : createObjectLiteralProperty(pickParams('query'), 'params'),
           ].filter(removeUndefined),
           false
         )
