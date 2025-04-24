@@ -1,11 +1,14 @@
 {
-  "name": "@rtk-query/codegen-openapi",
+  "name": "@siteground/codegen-openapi",
   "version": "2.0.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "module": "lib/index.mjs",
-  "author": "Lenz Weber",
+  "author": "Kiril Zhelyazkov",
   "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "sideEffects": false,
   "exports": {
     "./package.json": "./package.json",

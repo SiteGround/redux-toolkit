@@ -4,7 +4,6 @@ import ApiGenerator, {
   getOperationName as _getOperationName,
   getReferenceName,
   isReference,
-  supportDeepObjects,
   createPropertyAssignment,
   createQuestionToken,
   isValidIdentifier,
@@ -29,6 +28,10 @@ import { factory } from './utils/factory';
 
 const generatedApiName = 'injectedRtkApi';
 const v3DocCache: Record<string, OpenAPIV3.Document> = {};
+
+function isArrayNotation(name: string): boolean {
+  return /^(.+?)\[\]$/.test(name);
+}
 
 function defaultIsDataResponse(code: string, includeDefault: boolean) {
   if (includeDefault && code === 'default') {
@@ -288,7 +291,7 @@ export async function generateApi(
       .resolveArray(pathItem.parameters)
       .filter((pp) => !operationParameters.some((op) => op.name === pp.name && op.in === pp.in));
 
-    const parameters = supportDeepObjects([...pathItemParameters, ...operationParameters]).filter(
+    const parameters = [...pathItemParameters, ...operationParameters].filter(
       argumentMatches(overrides?.parameterFilter)
     );
 
@@ -315,10 +318,13 @@ export async function generateApi(
 
     for (const param of parameters) {
       const name = generateName(param.name, param.in);
+      // Preserve original bracket notation if present
+      const originalName = isArrayNotation(param.name) ? param.name : param.name;
+
       queryArg[name] = {
         origin: 'param',
         name,
-        originalName: param.name,
+        originalName,
         type: apiGen.getTypeFromSchema(isReference(param) ? param : param.schema, undefined, 'writeOnly'),
         required: param.required,
         param,
