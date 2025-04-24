@@ -1,15 +1,15 @@
 {
   "name": "@siteground/codegen-openapi",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "module": "lib/index.mjs",
   "author": "Kiril Zhelyazkov",
   "license": "MIT",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "sideEffects": false,
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "exports": {
     "./package.json": "./package.json",
     ".": {

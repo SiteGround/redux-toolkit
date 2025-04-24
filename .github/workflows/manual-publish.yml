@@ -1,0 +1,34 @@
+name: Publish Codegen Package to npmjs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish-codegen:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '22.x'
+          cache: 'yarn'
+
+      - run: yarn install --frozen-lockfile
+
+      - name: Create .npmrc for publishing to npm
+        run: |
+          cd packages/rtk-query-codegen-openapi
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN_READ_AND_PUBLISH }}" > .npmrc
+          cat .npmrc
+
+      - name: Publish codegen package to npm
+        run: |
+          cd packages/rtk-query-codegen-openapi
+          yarn install
+          npm publish
