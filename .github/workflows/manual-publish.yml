@@ -13,21 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
 
-      - run: yarn install --frozen-lockfile
-
-      - name: Create .npmrc for publishing to npm
+      - name: Create .npmrc at project root
         run: |
-          cd packages/rtk-query-codegen-openapi
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN_READ_AND_PUBLISH }}" > .npmrc
+          echo "@siteground:registry=https://registry.npmjs.org/" > .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN_READ_AND_PUBLISH }}" >> .npmrc
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Publish codegen package to npm
         run: |
           cd packages/rtk-query-codegen-openapi
-          yarn install
           npm publish
