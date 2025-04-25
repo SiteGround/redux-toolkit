@@ -9,7 +9,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -17,6 +16,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '22.x'
+          registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
 
       - run: yarn install --frozen-lockfile
@@ -25,7 +25,6 @@ jobs:
         run: |
           cd packages/rtk-query-codegen-openapi
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN_READ_AND_PUBLISH }}" > .npmrc
-          cat .npmrc
 
       - name: Publish codegen package to npm
         run: |
