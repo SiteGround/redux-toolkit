@@ -498,7 +498,7 @@ export async function generateApi(
               ? undefined
               : factory.createPropertyAssignment(
                   factory.createIdentifier('body'),
-                  factory.createIdentifier('queryArg')
+                  isFlatArg ? rootObject : accessProperty(rootObject, bodyParameter.name)
                 ),
             createObjectLiteralProperty(pickParams('cookie'), 'cookies'),
             createObjectLiteralProperty(pickParams('header'), 'headers'),
